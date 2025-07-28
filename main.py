@@ -1,4 +1,5 @@
 from flask import Flask
+from serverless_http import create_handler
 
 app = Flask(__name__)
 
@@ -6,5 +7,8 @@ app = Flask(__name__)
 def hello():
     return "Привет"
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)  # Открываем на всех интерфейсах
+@app.route('/<path:path>')
+def catch_all(path):
+    return f"Маршрут /{path} не найден", 404
+
+handler = create_handler(app)  # Создаём handler для Vercel
